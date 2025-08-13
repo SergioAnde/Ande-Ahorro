@@ -124,4 +124,4 @@ def index():
             "consumo_viejo": round(consumo_viejo, 2)
         }
 
-    return render_template_string(HTML_TEMPLATE, electrodomesticos=electrodomesticos_db, resultado=resultado)
+    return render_template(HTML_TEMPLATE, electrodomesticos=electrodomesticos_db, resultado=resultado)
