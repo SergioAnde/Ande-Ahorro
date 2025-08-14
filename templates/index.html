@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simulador ANDE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<img src="{{ url_for('static', filename='LOGO_ANDE.jpg') }}" class="logo">
+<h1>Es hora de ahorrar</h1>
+<div class="form-container">
+    <form method="post">
+        <label>Monto última factura (Gs):</label><br>
+        <input type="number" name="factura" required><br><br>
+
+        <label>Temporada:</label><br>
+        <select name="temporada">
+            <option value="verano">Verano</option>
+            <option value="invierno">Invierno</option>
+        </select><br><br>
+
+        {% for nombre, potencia in electrodomesticos.items() %}
+            <b>{{ nombre }}</b> ({{ potencia }}W) <br>
+            Cantidad: <input type="number" name="cantidad_{{nombre}}" min="0" value="0">
+            Rango horario: <input type="text" name="rango_{{nombre}}" placeholder="HH:MM-HH:MM"><br><br>
+        {% endfor %}
+
+        <button type="submit">Calcular</button>
+    </form>
+</div>
+
+{% if resultado %}
+<div class="resultado">
+    <h2>Resultados</h2>
+    Consumo mensual estimado: {{resultado.consumo}} kWh<br>
+    Costo actual estimado: {{resultado.costo_actual}} Gs<br>
+    Costo optimizado: {{resultado.costo_opt}} Gs<br>
+    Ahorro estimado: {{resultado.ahorro}} Gs ({{resultado.ahorro_pct}}%)<br>
+    Consumo con tarifa vieja: {{resultado.consumo_viejo}} kWh
+</div>
+{% endif %}
+</body>
+</html>

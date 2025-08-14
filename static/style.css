@@ -1,0 +1,5 @@
+body { font-family: Arial; background-color: #f0f8ff; color: #333; padding: 20px; }
+h1 { color: #006400; text-align: center; }
+.logo { position: absolute; top: 20px; left: 20px; width: 80px; }
+.form-container { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 2px 2px 10px #ccc; }
+.resultado { margin-top: 20px; padding: 20px; background: #e6ffe6; border: 2px solid #006400; }
