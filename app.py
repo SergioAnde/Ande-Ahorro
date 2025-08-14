@@ -10,8 +10,7 @@ electrodomesticos_db = {
     "aire12000btu": 1500, "aire24000btu": 3000, "cocina_2hornallas": 3500,
     "horno": 2700, "estufa": 1200, "termocalefon": 1500
 }
-@app.route("/", methods=["GET", "POST"])
-def index():
+
 tarifas_punta = [(500, 669.17), (1000, 696.42), (999999, 721.68)]
 tarifas_fuera_punta = [(500, 263.88), (1000, 274.62), (999999, 284.58)]
 
@@ -124,5 +123,8 @@ def index():
             "ahorro_pct": round(ahorro_pct, 1),
             "consumo_viejo": round(consumo_viejo, 2)
         }
-resultado = None
-    return render_template_string(HTML_TEMPLATE, electrodomesticos=electrodomesticos_db, resultado=resultado)
+
+    return render_template("index.html", electrodomesticos=electrodomesticos_db, resultado=resultado)
+
+if __name__ == "__main__":
+    app.run(port=5000, debug=True)
