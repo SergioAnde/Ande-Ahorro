@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador ANDE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='LOGO_ANDE.jpg') }}" alt="Logo ANDE" class="logo">
+        <h1>Simulador de Ahorro - Tarifa Dinámica ANDE</h1>
+        <form method="post">
+            <label>Consumo anterior (kWh):</label>
+            <input type="number" name="consumo_viejo" step="0.01" required>
+
+            <label>Consumo mensual estimado (kWh):</label>
+            <input type="number" name="consumo_mensual_kwh" step="0.01" required>
+
+            <label>Precio punta (Gs/kWh):</label>
+            <input type="number" name="precio_punta" step="0.01" required>
+
+            <label>Precio fuera de punta (Gs/kWh):</label>
+            <input type="number" name="precio_fuera_punta" step="0.01" required>
+
+            <button type="submit">Calcular</button>
+        </form>
+
+        {% if ahorro is not none %}
+            <div class="resultado {% if ahorro >= 0 %}positivo{% else %}negativo{% endif %}">
+                {% if ahorro >= 0 %}
+                    ¡Ahorro estimado: {{ ahorro }} Gs!
+                {% else %}
+                    Incremento estimado: {{ ahorro|abs }} Gs
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
