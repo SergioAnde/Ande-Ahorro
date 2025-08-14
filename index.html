@@ -33,16 +33,11 @@ url_for('static', filename='LOGO_ANDE.jpg')
     const electrodomesticos = {{ electrodomesticos | tojson }};
     const container = document.getElementById("inputs-container");
 
-    for (const [nombre, potencia] of Object.entries(electrodomesticos)) {
-        const div = document.createElement("div");
-        div.innerHTML = `
-            <b>${nombre}</b> (${potencia}W) <br>
-            Cantidad: <input type="number" name="cantidad_${nombre}" min="0" value="0">
-            Rango horario: <input type="text" name="rango_${nombre}" placeholder="HH:MM-HH:MM"><br><br>
-        `;
-        container.appendChild(div);
-    }
-</script>
+   {% for nombre, potencia in electrodomesticos.items() %}
+                <b>{{ nombre }}</b> ({{ potencia }}W) <br>
+                Cantidad: <input type="number" name="cantidad_{{nombre}}" min="0" value="0">
+                Rango horario: <input type="text" name="rango_{{nombre}}" placeholder="HH:MM-HH:MM"><br><br>
+            {% endfor %}
 
             <button type="submit">Calcular</button>
         </form>
