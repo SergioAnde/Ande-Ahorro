@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string, request, url_for
+from flask import Flask, render_template_string, request
 import math
 
 app = Flask(__name__)
@@ -38,7 +38,7 @@ def horas_desde_rango(rango_str):
     consumo_por_hora[int(fin) % 24] = fin - int(fin)
     return {h: v for h, v in consumo_por_hora.items() if v > 0}
 
-# --- LEER EL HTML DESDE DISCO ---
+# --- LEER HTML EXTERNO ---
 with open("index.html", "r", encoding="utf-8") as f:
     HTML_TEMPLATE = f.read()
 
@@ -60,7 +60,6 @@ def index():
                     "cantidad": int(cantidad)
                 }
 
-        # --- Cálculos de consumo y costo ---
         factura_gs = float(request.form["factura"])
         temporada = request.form["temporada"].lower()
         punta = punta_verano if temporada == "verano" else punta_invierno
@@ -99,12 +98,8 @@ def index():
                 precio = obtener_precio(consumo_mensual_kwh, horario)
                 costo_dyn += perfil_opt[h] * precio
 
-        consumoactual = [
-            (50, 311.55), (150, 349.89), (300, 365.45),
-            (500, 403.82), (1000, 420.27), (999999, 435.51)
-        ]
+        # Cálculo consumo viejo
         c1, c2, c3, c4, c5 = 50*311.55, 150*349.89, 300*365.45, 500*403.82, 1000*420.27
-
         if factura_gs <= c1:
             consumo_viejo = factura_gs / 311.55
         elif factura_gs <= c2:
@@ -130,3 +125,4 @@ def index():
         }
 
     return render_template_string(HTML_TEMPLATE, electrodomesticos=electrodomesticos_db, resultado=resultado)
+
