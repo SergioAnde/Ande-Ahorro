@@ -11,7 +11,7 @@
     </style>
 </head>
 <body>
-    <img src="{{ url_for('static', filename='LOGO_ANDE.jpg') }}" class="logo">
+    <img src="LOGO_ANDE.jpg">
     <h1>Es hora de ahorrar</h1>
     <div class="form-container">
         <form method="post">
@@ -24,35 +24,25 @@
                 <option value="invierno">Invierno</option>
             </select><br><br>
 
-            <div id="inputs-container"></div>
+            {% for nombre, potencia in electrodomesticos.items() %}
+                <b>{{ nombre }}</b> ({{ potencia }}W) <br>
+                Cantidad: <input type="number" name="cantidad_{{nombre}}" min="0" value="0">
+                Rango horario: <input type="text" name="rango_{{nombre}}" placeholder="HH:MM-HH:MM"><br><br>
+            {% endfor %}
 
             <button type="submit">Calcular</button>
         </form>
     </div>
 
-<script>
-    const electrodomesticos = {{ electrodomesticos | tojson }};
-    const container = document.getElementById("inputs-container");
-
-    for (const nombre in electrodomesticos) {
-        const potencia = electrodomesticos[nombre];
-        const div = document.createElement("div");
-        div.innerHTML = `<b>${nombre}</b> (${potencia}W)<br>
-            Cantidad: <input type="number" name="cantidad_${nombre}" min="0" value="0">
-            Rango horario: <input type="text" name="rango_${nombre}" placeholder="HH:MM-HH:MM"><br><br>`;
-        container.appendChild(div);
-    }
-</script>
-
-{% if resultado %}
-<div class="resultado">
-    <h2>Resultados</h2>
-    Consumo mensual estimado: {{resultado.consumo}} kWh<br>
-    Costo actual estimado: {{resultado.costo_actual}} Gs<br>
-    Costo optimizado: {{resultado.costo_opt}} Gs<br>
-    Ahorro estimado: {{resultado.ahorro}} Gs ({{resultado.ahorro_pct}}%)<br>
-    Consumo con tarifa vieja: {{resultado.consumo_viejo}} kWh
-</div>
-{% endif %}
+    {% if resultado %}
+    <div class="resultado">
+        <h2>Resultados</h2>
+        Consumo mensual estimado: {{ resultado.consumo }} kWh<br>
+        Costo actual estimado: {{ resultado.costo_actual }} Gs<br>
+        Costo optimizado: {{ resultado.costo_opt }} Gs<br>
+        Ahorro estimado: {{ resultado.ahorro }} Gs ({{ resultado.ahorro_pct }}%)<br>
+        Consumo con tarifa vieja: {{ resultado.consumo_viejo }} kWh
+    </div>
+    {% endif %}
 </body>
 </html>
