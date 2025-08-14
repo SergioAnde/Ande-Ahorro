@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string, request
+from flask import Flask, render_template_string, request, url_for
 import math
 
 app = Flask(__name__)
@@ -38,6 +38,10 @@ def horas_desde_rango(rango_str):
     consumo_por_hora[int(fin) % 24] = fin - int(fin)
     return {h: v for h, v in consumo_por_hora.items() if v > 0}
 
+# --- LEER EL HTML DESDE DISCO ---
+with open("index.html", "r", encoding="utf-8") as f:
+    HTML_TEMPLATE = f.read()
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     resultado = None
@@ -56,6 +60,7 @@ def index():
                     "cantidad": int(cantidad)
                 }
 
+        # --- Cálculos de consumo y costo ---
         factura_gs = float(request.form["factura"])
         temporada = request.form["temporada"].lower()
         punta = punta_verano if temporada == "verano" else punta_invierno
@@ -124,7 +129,4 @@ def index():
             "consumo_viejo": round(consumo_viejo, 2)
         }
 
-    return render_template_string("index.html", electrodomesticos=electrodomesticos_db, resultado=resultado)
-
-if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    return render_template_string(HTML_TEMPLATE, electrodomesticos=electrodomesticos_db, resultado=resultado)
