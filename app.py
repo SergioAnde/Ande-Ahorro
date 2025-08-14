@@ -38,10 +38,6 @@ def horas_desde_rango(rango_str):
     consumo_por_hora[int(fin) % 24] = fin - int(fin)
     return {h: v for h, v in consumo_por_hora.items() if v > 0}
 
-# --- LEER HTML EXTERNO ---
-with open("index.html", "r", encoding="utf-8") as f:
-    HTML_TEMPLATE = f.read()
-
 @app.route("/", methods=["GET", "POST"])
 def index():
     resultado = None
@@ -98,8 +94,12 @@ def index():
                 precio = obtener_precio(consumo_mensual_kwh, horario)
                 costo_dyn += perfil_opt[h] * precio
 
-        # Cálculo consumo viejo
+        consumoactual = [
+            (50, 311.55), (150, 349.89), (300, 365.45),
+            (500, 403.82), (1000, 420.27), (999999, 435.51)
+        ]
         c1, c2, c3, c4, c5 = 50*311.55, 150*349.89, 300*365.45, 500*403.82, 1000*420.27
+
         if factura_gs <= c1:
             consumo_viejo = factura_gs / 311.55
         elif factura_gs <= c2:
@@ -126,3 +126,54 @@ def index():
 
     return render_template_string(HTML_TEMPLATE, electrodomesticos=electrodomesticos_db, resultado=resultado)
 
+HTML_TEMPLATE = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simulador ANDE</title>
+    <style>
+        body { font-family: Arial; background-color: #f0f8ff; color: #333; padding: 20px; }
+        h1 { color: #006400; text-align: center; }
+        .logo { position: absolute; top: 20px; left: 20px; width: 80px; }
+        .form-container { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 2px 2px 10px #ccc; }
+        .resultado { margin-top: 20px; padding: 20px; background: #e6ffe6; border: 2px solid #006400; }
+    </style>
+</head>
+<body>
+url_for('static', filename='LOGO_ANDE.jpg')
+    <img src="LOGO_ANDE.jpg">
+    <h1>Es hora de ahorrar</h1>
+    <div class="form-container">
+        <form method="post">
+            <label>Monto última factura (Gs):</label><br>
+            <input type="number" name="factura" required><br><br>
+
+            <label>Temporada:</label><br>
+            <select name="temporada">
+                <option value="verano">Verano</option>
+                <option value="invierno">Invierno</option>
+            </select><br><br>
+
+            {% for nombre, potencia in electrodomesticos.items() %}
+                <b>{{ nombre }}</b> ({{ potencia }}W) <br>
+                Cantidad: <input type="number" name="cantidad_{{nombre}}" min="0" value="0">
+                Rango horario: <input type="text" name="rango_{{nombre}}" placeholder="HH:MM-HH:MM"><br><br>
+            {% endfor %}
+
+            <button type="submit">Calcular</button>
+        </form>
+    </div>
+
+    {% if resultado %}
+    <div class="resultado">
+        <h2>Resultados</h2>
+        Consumo mensual estimado: {{resultado.consumo}} kWh<br>
+        Costo actual estimado: {{resultado.costo_actual}} Gs<br>
+        Costo optimizado: {{resultado.costo_opt}} Gs<br>
+        Ahorro estimado: {{resultado.ahorro}} Gs ({{resultado.ahorro_pct}}%)<br>
+        Consumo con tarifa vieja: {{resultado.consumo_viejo}} kWh
+    </div>
+    {% endif %}
+</body>
+</html>
+"""
