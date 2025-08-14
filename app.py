@@ -1,4 +1,4 @@
-from flask import Flask, render_templates, request
+from flask import Flask, render_template, request
 import math
 
 app = Flask(__name__)
@@ -123,5 +123,5 @@ def index():
             "consumo_viejo": round(consumo_viejo, 2)
         }
 
-    return render_templates('index.html', electrodomesticos=electrodomesticos_db, resultado=resultado)
+    return render_template('index.html', electrodomesticos=electrodomesticos_db, resultado=resultado)
 
