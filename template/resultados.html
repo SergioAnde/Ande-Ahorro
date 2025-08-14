@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Resultados del Cálculo</h1>
+    <p>Horas pico: {{ horas_pico }}</p>
+    <p>Horas fuera de pico: {{ horas_fuera_pico }}</p>
+    <p>Consumo total: {{ consumo_total }} kWh</p>
+    <p>Costo en hora pico: {{ costo_pico }} Gs</p>
+    <p>Costo fuera de pico: {{ costo_fuera_pico }} Gs</p>
+    <h2>Costo total: {{ costo_total }} Gs</h2>
+
+    <a href="/">Volver</a>
+</body>
+</html>
